@@ -11,6 +11,7 @@ import System.FilePath (
   )
 import Data.List.Split (splitOn)
 import Data.List (find)
+import Text.Read (readMaybe)
 
 -- LTS Haskell version (major, minor)
 data Version = Version Int Int deriving (Show, Eq, Ord)
@@ -30,7 +31,7 @@ extractVersion path = do
       version = do
         lastDirName <- find (not . null) $ reverse dirs
         let majorMinor = splitOn "." lastDirName
-        case fmap (read :: String -> Int) majorMinor of
-         [major, minor] -> Just (Version major minor)
+        case fmap (readMaybe :: String -> Maybe Int) majorMinor of
+         [Just major, Just minor] -> Just (Version major minor)
          _ -> Nothing
   return version
